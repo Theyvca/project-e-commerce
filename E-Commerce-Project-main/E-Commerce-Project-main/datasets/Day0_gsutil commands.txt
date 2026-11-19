@@ -1,0 +1,26 @@
+gcloud auth login
+gcloud config get-value project
+gcloud projects list
+bq mk --dataset mahesh2726:retail_raw
+gcloud storage buckets create gs://retail-landing-bucket-20261119
+
+bq load --source_format=CSV --skip_leading_rows=1 mahesh2726:retail_raw.orders_stg gs://retail-landing-bucket-20261119/landing/2026-11-19/orders_2026-10-01.csv "order_id:STRING,customer_id:STRING,product_id:STRING,quantity:STRING,unit_price:STRING,order_ts:STRING,order_status:STRING,source_system:STRING"
+
+bq load --source_format=CSV --skip_leading_rows=1 mahesh2726:retail_raw.payments_stg gs://retail-landing-bucket-20261119/landing/2026-11-19/payments_2026-10-01.csv "payment_id:STRING,order_id:STRING,payment_ts:STRING,payment_method:STRING,payment_status:STRING,paid_amount:STRING"
+
+bq load --source_format=CSV --skip_leading_rows=1 mahesh2726:retail_raw.customers_stg gs://retail-landing-bucket-20261119/reference/customers.csv "customer_id:STRING,customer_name:STRING,email:STRING,city:STRING,state:STRING,created_at:STRING,is_active:STRING"
+
+bq load --source_format=CSV --skip_leading_rows=1 mahesh2726:retail_raw.products_stg gs://retail-landing-bucket-20261119/reference/products.csv "product_id:STRING,product_name:STRING,category:STRING,unit_price:STRING,updated_at:STRING,is_active:STRING"
+
+git clone https://github.com/Theyvca/project-e-commerce.git
+
+cd /d C:\Users\dell\Downloads\project-e-commerce
+
+
+git status
+git add .
+git commit -m "Add retail pipeline project files"
+
+git rm -r --cached retail_pipeline_sample-20261119T084731Z-1-001
+git commit -m "Remove incorrectly uploaded folder"
+git push
